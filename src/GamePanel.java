@@ -42,9 +42,6 @@ public class GamePanel extends JPanel implements ActionListener {
         running = true;
         timer = new Timer(Delay, this);
         timer.start();
-        /*for(int i=0;i<Game_units;i++){
-            System.out.println(z[i][i]);
-        }*/
     }
 
     public void paintComponent(Graphics g) {
@@ -98,8 +95,8 @@ public class GamePanel extends JPanel implements ActionListener {
             g.setColor(Color.green);
             g.fillRect(startPX, startPY, unit_size * 5, unit_size * 5);
             for (int j = startPX; j < startPX + 6; j++) {
-                xp[j] = 1;
-                yp[j] = 1;
+                x[j] = 1;
+                y[j] = 1;
             }
         }
 
@@ -113,13 +110,10 @@ public class GamePanel extends JPanel implements ActionListener {
     }*/
 
     public void checkCollisions() {
-        for (int i = 0; i < screen_width / unit_size; i++) {
-            for (int j = 0; j < screen_width / unit_size; j++) {
-                if (xp[i] == 1 && yp[j] == 1) {
-                    if (x[0] == i * unit_size && y[0] == j * unit_size) {
-                        running = false;
-                    }
-                }
+        for (int i = bodyParts; i > 0; i--) {
+            if ((x[0] == x[i]) && (y[0] == y[i])) {
+                running = false;
+                break;
             }
         }
     }
