@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
-
     static final int screen_width = 600;
     static final int screen_hight = 600;
     static final int unit_size = 25;
@@ -15,21 +14,17 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int Delay = 275;
     final int[] x = new int[Game_units];
     final int[] y = new int[Game_units];
-
     //final int[] xp = new int[Game_units];
     //final int[] yp = new int[Game_units];
-
     int bodyParts = 0;
     int startPX = 11 * unit_size;
     int startPY = 8 * unit_size;
-
     char direction = 'L';
     boolean running = false;
     Timer timer;
     Random random;
 
     GamePanel() {
-
         random = new Random();
         this.setPreferredSize(new Dimension(screen_width, screen_hight));
         this.setBackground(Color.black);
@@ -46,7 +41,6 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         draw(g);
     }
@@ -57,7 +51,7 @@ public class GamePanel extends JPanel implements ActionListener {
             y[i] = y[i - 1];
         }
         bodyParts++;
-        System.out.println(bodyParts);
+        //System.out.println(bodyParts);
         switch (direction) {
             case 'U' -> y[0] = y[0] - unit_size;
             case 'D' -> y[0] = y[0] + unit_size;
@@ -66,10 +60,6 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
     }
-
-    /*public void GameOver(Graphics g) {
-
-    }*/
 
     public void draw(Graphics g) {
         for (int i = 0; i < screen_hight / unit_size; i++) {
@@ -88,22 +78,17 @@ public class GamePanel extends JPanel implements ActionListener {
             g.setColor(Color.green);
             g.fillRect(startPX, startPY, unit_size * 5, unit_size * 5);
             for (int j = startPX; j < startPX + 6; j++) {
-                x[j] = 1;
-                y[j] = 1;
+                x[j] = x[0];
+                y[j] = y[0];
             }
         }
 
     }
 
-    /*public void newSpace(){
-        SpaceX = screen_width/2;
-        SpaceY = screen_hight/2;
-        //random.nextInt((int)(screen_width/unit_size))*unit_size;
-
-    }*/
-
     public void checkCollisions() {
         for (int i = bodyParts; i > 0; i--) {
+            System.out.println("x[" + i + "]: " + x[i]);
+            System.out.println("y[" + i + "]: " + y[i]);
             if ((x[0] == x[i]) && (y[0] == y[i])) {
                 running = false;
                 break;
