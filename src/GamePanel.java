@@ -15,6 +15,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int Delay = 275;
     final int[] x = new int[Game_units];
     final int[] y = new int[Game_units];
+
     //final int[] xp = new int[Game_units];
     //final int[] yp = new int[Game_units];
 
