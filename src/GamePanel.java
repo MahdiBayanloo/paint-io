@@ -15,8 +15,8 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int Delay = 275;
     final int[] x = new int[Game_units];
     final int[] y = new int[Game_units];
-    final int[] xp = new int[Game_units];
-    final int[] yp = new int[Game_units];
+    //final int[] xp = new int[Game_units];
+    //final int[] yp = new int[Game_units];
 
     int bodyParts = 0;
     int startPX = 11 * unit_size;
@@ -58,25 +58,17 @@ public class GamePanel extends JPanel implements ActionListener {
         bodyParts++;
         System.out.println(bodyParts);
         switch (direction) {
-            case 'U':
-                y[0] = y[0] - unit_size;
-                break;
-            case 'D':
-                y[0] = y[0] + unit_size;
-                break;
-            case 'L':
-                x[0] = x[0] - unit_size;
-                break;
-            case 'R':
-                x[0] = x[0] + unit_size;
-                break;
+            case 'U' -> y[0] = y[0] - unit_size;
+            case 'D' -> y[0] = y[0] + unit_size;
+            case 'L' -> x[0] = x[0] - unit_size;
+            case 'R' -> x[0] = x[0] + unit_size;
         }
 
     }
 
-    public void GameOver(Graphics g) {
+    /*public void GameOver(Graphics g) {
 
-    }
+    }*/
 
     public void draw(Graphics g) {
         for (int i = 0; i < screen_hight / unit_size; i++) {
@@ -134,26 +126,26 @@ public class GamePanel extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
 
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_LEFT -> {
                     if (direction != 'R') {
                         direction = 'L';
                     }
-                    break;
-                case KeyEvent.VK_RIGHT:
+                }
+                case KeyEvent.VK_RIGHT -> {
                     if (direction != 'L') {
                         direction = 'R';
                     }
-                    break;
-                case KeyEvent.VK_UP:
+                }
+                case KeyEvent.VK_UP -> {
                     if (direction != 'D') {
                         direction = 'U';
                     }
-                    break;
-                case KeyEvent.VK_DOWN:
+                }
+                case KeyEvent.VK_DOWN -> {
                     if (direction != 'U') {
                         direction = 'D';
                     }
-                    break;
+                }
             }
         }
     }
