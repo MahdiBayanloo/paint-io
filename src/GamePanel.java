@@ -16,9 +16,10 @@ public class GamePanel extends JPanel implements ActionListener {
     final int[] y = new int[Game_units];
     //final int[] xp = new int[Game_units];
     //final int[] yp = new int[Game_units];
+    int[][] panelMtx = new int[screen_width / unit_size][screen_hight / unit_size];
     int bodyParts = 0;
-    int startPX = 11 * unit_size;
-    int startPY = 8 * unit_size;
+    int startPX = ((screen_width / unit_size) - 4) / 2;
+    int startPY = ((screen_hight / unit_size) - 4) / 2;
     char direction = 'L';
     boolean running = false;
     Timer timer;
@@ -33,11 +34,30 @@ public class GamePanel extends JPanel implements ActionListener {
         startGame();
     }
 
+    public void primaryPaint() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                panelMtx[startPX + i][startPY + j] = 2;
+            }
+        }
+    }
+
+    public void chap() {
+        for (int i = 0; i < screen_width / unit_size; i++) {
+            for (int j = 0; j < screen_hight / unit_size; j++) {
+                System.out.print(panelMtx[i][j] + " ");
+                if (j == ((screen_hight / unit_size) - 1))
+                    System.out.println();
+            }
+        }
+    }
+
     public void startGame() {
-        //newSpace();
         running = true;
+        primaryPaint();
         timer = new Timer(Delay, this);
         timer.start();
+        chap();
     }
 
     public void paintComponent(Graphics g) {
@@ -61,6 +81,15 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
+    public void fill() {
+        for (int i = 0; i < screen_width / unit_size; i++) {
+            for (int j = 0; j < screen_hight / unit_size; j++) {
+                if (panelMtx[i][j] > 0)
+                    panelMtx[i][j] = 2;
+            }
+        }
+    }
+
     public void draw(Graphics g) {
         for (int i = 0; i < screen_hight / unit_size; i++) {
             g.drawLine(i * unit_size, 0, i * unit_size, screen_hight);
@@ -70,26 +99,36 @@ public class GamePanel extends JPanel implements ActionListener {
         for (int i = 0; i < bodyParts; i++) {
             if (i == 0) {
                 g.setColor(Color.green);
-                g.fillRect(x[i] + startPX, y[i] + startPY, unit_size, unit_size);
+                g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
             } else {
                 g.setColor(new Color(45, 120, 20));
-                g.fillRect(x[i] + startPX, y[i] + startPY, unit_size, unit_size);
+                g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
+                if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 0)
+                    panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] = 1;
+                else if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2) {
+                    fill();
+                    break;
+                }
+
             }
             g.setColor(Color.green);
-            g.fillRect(startPX, startPY, unit_size * 5, unit_size * 5);
-            for (int j = startPX; j < startPX + 6; j++) {
-                x[j] = x[0];
-                y[j] = y[0];
+            for (int k = 0; k < screen_width / unit_size; k++) {
+                for (int j = 0; j < screen_hight / unit_size; j++) {
+                    if (panelMtx[k][j] == 2)
+                        g.fillRect(j * unit_size, k * unit_size, unit_size, unit_size);
+                }
             }
+
         }
 
     }
 
     public void checkCollisions() {
         for (int i = bodyParts; i > 0; i--) {
-            System.out.println("x[" + i + "]: " + x[i]);
-            System.out.println("y[" + i + "]: " + y[i]);
             if ((x[0] == x[i]) && (y[0] == y[i])) {
+                System.out.println("x[" + i + "]: " + x[i]);
+                System.out.println("y[" + i + "]: " + y[i]);
+                chap();
                 running = false;
                 break;
             }
