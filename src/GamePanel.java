@@ -88,6 +88,22 @@ public class GamePanel extends JPanel implements ActionListener {
                     panelMtx[i][j] = 2;
             }
         }
+        int sum = 0;
+        for (int i = 0; i < screen_width / unit_size; i++) {
+            for (int j = 0; j < screen_hight / unit_size; j++) {
+                sum = sum + panelMtx[i][j];
+                if(sum==4){
+                    int k = j-1;
+                    sum = 0;
+                    while (panelMtx[i][k]==0) {
+                        panelMtx[i][k] = 2;
+                        k = k - 1;
+                        if(k==1)
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     public void draw(Graphics g) {
@@ -100,16 +116,15 @@ public class GamePanel extends JPanel implements ActionListener {
             if (i == 0) {
                 g.setColor(Color.green);
                 g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
-            } else {
-                g.setColor(new Color(45, 120, 20));
-                g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
-                if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 0)
-                    panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] = 1;
-                else if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2) {
+                if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2) {
                     fill();
-                    break;
                 }
-
+            } else {
+                g.setColor(new Color(45, 180, 20,100));
+                g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
+                if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 0) {
+                    panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] = 1;
+                }
             }
             g.setColor(Color.green);
             for (int k = 0; k < screen_width / unit_size; k++) {
@@ -124,7 +139,7 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkCollisions() {
-        for (int i = bodyParts; i > 0; i--) {
+        /*for (int i = bodyParts; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) {
                 System.out.println("x[" + i + "]: " + x[i]);
                 System.out.println("y[" + i + "]: " + y[i]);
@@ -132,7 +147,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 running = false;
                 break;
             }
-        }
+        }*/
     }
 
     @Override
