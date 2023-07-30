@@ -88,8 +88,9 @@ public class GamePanel extends JPanel implements ActionListener {
                     panelMtx[i][j] = 2;
             }
         }
-        int sum = 0;
-        for (int i = 0; i < screen_width / unit_size; i++) {
+        bodyParts = 1;
+
+        /*for (int i = 0; i < screen_width / unit_size; i++) {
             for (int j = 0; j < screen_hight / unit_size; j++) {
                 sum = sum + panelMtx[i][j];
                 if(sum==4){
@@ -103,7 +104,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     }
                 }
             }
-        }
+        }*/
     }
 
     public void draw(Graphics g) {
@@ -112,7 +113,7 @@ public class GamePanel extends JPanel implements ActionListener {
             g.drawLine(0, i * unit_size, screen_width, i * unit_size);
         }
 
-        for (int i = 0; i < bodyParts; i++) {
+        for (int i = 0; i <= bodyParts; i++) {
             if (i == 0) {
                 g.setColor(Color.green);
                 g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
@@ -120,7 +121,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     fill();
                 }
             } else {
-                g.setColor(new Color(45, 180, 20,100));
+                g.setColor(new Color(45, 180, 20, 100));
                 g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
                 if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 0) {
                     panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] = 1;
