@@ -118,7 +118,8 @@ public class GamePanel extends JPanel implements ActionListener {
                 g.setColor(Color.green);
                 g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
                 if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2) {
-                    fill();
+                    //fill();
+                    checkCollisions();
                 }
             } else {
                 g.setColor(new Color(45, 180, 20, 100));
@@ -142,13 +143,37 @@ public class GamePanel extends JPanel implements ActionListener {
     public void checkCollisions() {
         /*for (int i = bodyParts; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) {
-                System.out.println("x[" + i + "]: " + x[i]);
+                for (int j = bodyParts; j > 0; j--){
+
+                    panelMtx[y[j] / unit_size + startPY][x[j] / unit_size + startPX]=2;
+                }
+                /*System.out.println("x[" + i + "]: " + x[i]);
                 System.out.println("y[" + i + "]: " + y[i]);
                 chap();
                 running = false;
-                break;
             }
         }*/
+        for (int i = bodyParts; i > 0; i--) {
+            for (int j = i - 1; j > 0; j--) {
+                if (x[i] == x[j]) {
+                    for (int k = j; k <= i; k++) {
+                        panelMtx[y[k] / unit_size + startPY][x[j] / unit_size + startPX] = 2;
+                    }
+                }
+                if (y[i] == y[j]) {
+                    for (int k = j; k <= i; k++) {
+                        panelMtx[y[j] / unit_size + startPY][x[k] / unit_size + startPX] = 2;
+                    }
+                }
+                if (y[i] == y[j] && x[i] == x[j]) {
+                    for (int k = j; k <= i; k++) {
+                        panelMtx[y[k] / unit_size + startPY][x[k] / unit_size + startPX] = 2;
+                    }
+                }
+            }
+        }
+        bodyParts = 0;
+
     }
 
     @Override
@@ -156,7 +181,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (running) {
             move();
-            checkCollisions();
         }
         repaint();
 
