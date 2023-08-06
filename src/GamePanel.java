@@ -7,8 +7,8 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
-    static final int screen_width = 600;
-    static final int screen_hight = 600;
+    static final int screen_width = 2 * 600;
+    static final int screen_hight = 2 * 600;
     static final int unit_size = 25;
     static final int Game_units = (screen_width * screen_hight) / unit_size;
     static final int Delay = 275;
@@ -65,17 +65,38 @@ public class GamePanel extends JPanel implements ActionListener {
         bodyParts++;
         switch (direction) {
             case 'U':
-                y[0] = y[0] - unit_size;
+                //y[0] = y[0] - unit_size;
+                for (int i = screen_hight / unit_size - 1; i > 0; i--) {
+                    panelMtx[screen_width / unit_size - 1][i] = 0;
+                }
+                // Shift each element in each column down by the shiftAmount
+                for (int i = screen_hight / unit_size - 1; i > 0; i--) {
+                    System.arraycopy(panelMtx[i - 1], 0, panelMtx[i], 0, screen_width / unit_size);
+                }
                 break;
             case 'D':
-                y[0] = y[0] + unit_size;
+                //y[0] = y[0] + unit_size;
+                // Add a row of zeros at the top
+                for (int i = 0; i < screen_hight / unit_size; i++) {
+                    panelMtx[screen_width / unit_size - 1][i] = 0;
+                }
+                // Shift each element in each column down by the shiftAmount
+                for (int i = 0; i < screen_hight / unit_size - 1; i++) {
+                    System.arraycopy(panelMtx[i + 1], 0, panelMtx[i], 0, screen_width / unit_size);
+                }
                 break;
             case 'L':
-                x[0] = x[0] - unit_size;
+                //x[0] = x[0] - unit_size;
+                for (int i = 0; i < screen_width / unit_size; i++) {
+                    int firstElement = panelMtx[i][0];
+                    for (int j = screen_hight / unit_size - 1; j > 0; j--) {
+                        panelMtx[i][j] = panelMtx[i][j - 1];
+                    }
+                    panelMtx[i][screen_hight / unit_size - 1] = 0;
+                }
                 break;
             case 'R':
                 //x[0] = x[0] + unit_size;
-                //panelMtx[y[0] / unit_size + startPY][x[0] / unit_size + startPX] = 1;
                 for (int i = 0; i < screen_width / unit_size; i++) {
                     int firstElement = panelMtx[i][0];
                     for (int j = 0; j < screen_hight / unit_size - 1; j++) {
@@ -166,7 +187,7 @@ public class GamePanel extends JPanel implements ActionListener {
         bodyParts = 0;
         chap();
         System.out.println("dfdfdfdsfsss");
-    }*/
+    }
     public void checkCollisions() {
         for (int i = 1; i < screen_width / unit_size - 1; i++) {
             int sum = 0;
@@ -187,7 +208,12 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
             }
         }
+    }*/
+    public void checkCollisions() {
+        MatrixConverter converter = new MatrixConverter(panelMtx);
+        converter.convertZeros();
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
