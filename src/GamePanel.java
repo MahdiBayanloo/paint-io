@@ -7,8 +7,8 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
-    static final int screen_width = 2 * 600;
-    static final int screen_hight = 2 * 600;
+    static final int screen_width = 600;
+    static final int screen_hight = 600;
     static final int unit_size = 25;
     static final int Game_units = (screen_width * screen_hight) / unit_size;
     static final int Delay = 275;
@@ -142,7 +142,6 @@ public class GamePanel extends JPanel implements ActionListener {
                 g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
                 if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2 && bodyParts > 1) {
                     fill();
-                    chap();
                     checkCollisions();
                 }
                 panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] = 1;
