@@ -74,8 +74,8 @@ public class GamePanel extends JPanel implements ActionListener {
                 x[0] = x[0] - unit_size;
                 break;
             case 'R':
-                x[0] = x[0] + unit_size;
-                panelMtx[y[0] / unit_size + startPY][x[0] / unit_size + startPX] = 1;
+                //x[0] = x[0] + unit_size;
+                //panelMtx[y[0] / unit_size + startPY][x[0] / unit_size + startPX] = 1;
                 for (int i = 0; i < screen_width / unit_size; i++) {
                     int firstElement = panelMtx[i][0];
                     for (int j = 0; j < screen_hight / unit_size - 1; j++) {
@@ -97,6 +97,17 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    public void fill() {
+        for (int i = 0; i < screen_width / unit_size; i++) {
+            for (int j = 0; j < screen_hight / unit_size; j++) {
+                if (panelMtx[i][j] > 0)
+                    panelMtx[i][j] = 2;
+            }
+        }
+        bodyParts = 1;
+
+    }
+
     public void draw(Graphics g) {
         for (int i = 0; i < screen_hight / unit_size; i++) {
             g.setColor(Color.WHITE);
@@ -108,7 +119,9 @@ public class GamePanel extends JPanel implements ActionListener {
             if (i == 0) {
                 g.setColor(Color.green);
                 g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
-                if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2) {
+                if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2 && bodyParts > 1) {
+                    fill();
+                    chap();
                     checkCollisions();
                 }
                 panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] = 1;
@@ -130,7 +143,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-    public void checkCollisions() {
+    /*public void checkCollisions() {
         for (int i = bodyParts; i > 0; i--) {
             for (int j = i - 1; j > 0; j--) {
                 if (x[i] == x[j]) {
@@ -153,6 +166,27 @@ public class GamePanel extends JPanel implements ActionListener {
         bodyParts = 0;
         chap();
         System.out.println("dfdfdfdsfsss");
+    }*/
+    public void checkCollisions() {
+        for (int i = 1; i < screen_width / unit_size - 1; i++) {
+            int sum = 0;
+            for (int j = 1; j < screen_hight / unit_size - 1; j++) {
+                sum = sum + panelMtx[i][j];
+                int sum1 = sum + panelMtx[i][j + 1];
+                if (sum1 == 6)
+                    sum = 0;
+                if (sum >= 4) {
+                    int k = j - 1;
+                    while (panelMtx[i][k] == 0) {
+                        panelMtx[i][k] = 2;
+                        k--;
+                        if (k < 0)
+                            break;
+                    }
+                    sum = 0;
+                }
+            }
+        }
     }
 
     @Override
