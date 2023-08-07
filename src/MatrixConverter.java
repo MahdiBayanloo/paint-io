@@ -58,27 +58,4 @@ public class MatrixConverter {
         convertConnectedComponent(row, col - 1);
         convertConnectedComponent(row, col + 1);
     }
-
-    public void printMatrix() {
-        for (int[] row : matrix) {
-            for (int cell : row) {
-                System.out.print(cell + " ");
-            }
-            System.out.println();
-        }
-    }
-
-   /* public static void main(String[] args) {
-        int[][] matrix = {
-                {0, 0, 2, 2, 2},
-                {0, 2, 2, 0, 2},
-                {0, 2, 0, 2, 2},
-                {0, 2, 0, 2, 0},
-                {0, 2, 2, 2, 0}
-        };
-
-        MatrixConverter converter = new MatrixConverter(matrix);
-        converter.convertZeros();
-        converter.printMatrix();
-    }*/
 }

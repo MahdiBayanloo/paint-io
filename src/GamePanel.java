@@ -1,25 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
-    static final int screen_width = 600;
-    static final int screen_hight = 600;
+    static final int screen_width = 2 * 600;
+    static final int screen_hight = 2 * 600;
     static final int unit_size = 25;
     static final int Game_units = (screen_width * screen_hight) / unit_size;
     static final int Delay = 275;
     final int[] x = new int[Game_units];
     final int[] y = new int[Game_units];
-    //final int[] xp = new int[Game_units];
-    //final int[] yp = new int[Game_units];
     int[][] panelMtx = new int[screen_width / unit_size][screen_hight / unit_size];
     int bodyParts = 0;
-    int startPX = ((screen_width / unit_size) - 4) / 2;
-    int startPY = ((screen_hight / unit_size) - 4) / 2;
+    int startPX = ((screen_width / 2 / unit_size) - 4) / 2;
+    int startPY = ((screen_hight / 2 / unit_size) - 4) / 2;
     char direction = 'L';
     boolean running = false;
     Timer timer;
@@ -27,10 +22,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
     GamePanel() {
         random = new Random();
-        this.setPreferredSize(new Dimension(screen_width, screen_hight));
+        this.setPreferredSize(new Dimension(screen_width / 2, screen_hight / 2));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdepter());
+        this.addMouseMotionListener(new MyMouseAdepter());
         startGame();
     }
 
@@ -88,7 +84,7 @@ public class GamePanel extends JPanel implements ActionListener {
             case 'L':
                 //x[0] = x[0] - unit_size;
                 for (int i = 0; i < screen_width / unit_size; i++) {
-                    int firstElement = panelMtx[i][0];
+                    //int firstElement = panelMtx[i][0];
                     for (int j = screen_hight / unit_size - 1; j > 0; j--) {
                         panelMtx[i][j] = panelMtx[i][j - 1];
                     }
@@ -98,7 +94,7 @@ public class GamePanel extends JPanel implements ActionListener {
             case 'R':
                 //x[0] = x[0] + unit_size;
                 for (int i = 0; i < screen_width / unit_size; i++) {
-                    int firstElement = panelMtx[i][0];
+                    //int firstElement = panelMtx[i][0];
                     for (int j = 0; j < screen_hight / unit_size - 1; j++) {
                         panelMtx[i][j] = panelMtx[i][j + 1];
                     }
@@ -163,54 +159,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-    /*public void checkCollisions() {
-        for (int i = bodyParts; i > 0; i--) {
-            for (int j = i - 1; j > 0; j--) {
-                if (x[i] == x[j]) {
-                    for (int k = j; k <= i; k++) {
-                        panelMtx[y[k] / unit_size + startPY][x[j] / unit_size + startPX] = 2;
-                    }
-                }
-                if (y[i] == y[j]) {
-                    for (int k = j; k <= i; k++) {
-                        panelMtx[y[j] / unit_size + startPY][x[k] / unit_size + startPX] = 2;
-                    }
-                }
-                if (y[i] == y[j] && x[i] == x[j]) {
-                    for (int k = j; k <= i; k++) {
-                        panelMtx[y[k] / unit_size + startPY][x[k] / unit_size + startPX] = 2;
-                    }
-                }
-            }
-        }
-        bodyParts = 0;
-        chap();
-        System.out.println("dfdfdfdsfsss");
-    }
-    public void checkCollisions() {
-        for (int i = 1; i < screen_width / unit_size - 1; i++) {
-            int sum = 0;
-            for (int j = 1; j < screen_hight / unit_size - 1; j++) {
-                sum = sum + panelMtx[i][j];
-                int sum1 = sum + panelMtx[i][j + 1];
-                if (sum1 == 6)
-                    sum = 0;
-                if (sum >= 4) {
-                    int k = j - 1;
-                    while (panelMtx[i][k] == 0) {
-                        panelMtx[i][k] = 2;
-                        k--;
-                        if (k < 0)
-                            break;
-                    }
-                    sum = 0;
-                }
-            }
-        }
-    }*/
     public void checkCollisions() {
         MatrixConverter converter = new MatrixConverter(panelMtx);
         converter.convertZeros();
+        System.out.println("************************************************************");
+        chap();
     }
 
 
@@ -249,6 +202,42 @@ public class GamePanel extends JPanel implements ActionListener {
                         direction = 'D';
                     }
                 }
+            }
+        }
+    }
+
+    public class MyMouseAdepter extends MouseAdapter {
+        private int characterX = 0;
+        private int characterY = 0;
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            int mouseX = e.getX();
+            int mouseY = e.getY();
+
+            // Calculate the movement direction based on mouse position
+            int dx = mouseX - characterX;
+            int dy = mouseY - characterY;
+
+            // Update character position
+            characterX = mouseX;
+            characterY = mouseY;
+
+            // Perform character movement based on direction
+            if (dx > 0) {
+                // Move right
+                direction = 'R';
+            } else if (dx < 0) {
+                // Move left
+                direction = 'L';
+            }
+
+            if (dy > 0) {
+                // Move down
+                direction = 'D';
+            } else if (dy < 0) {
+                // Move up
+                direction = 'U';
             }
         }
     }
