@@ -3,26 +3,26 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GamePanel extends JPanel implements ActionListener {
-    static final int Delay = 375;
-    static final int unit_size = 25;
-    static int scale = 3;
-    static final int screen_width = scale * 600;
-    static final int camera_width = screen_width / scale;
-    static final int screen_hight = scale * 600;
-    static final int camera_hight = screen_hight / scale;
-    static final int Game_units = (screen_width * screen_hight) / unit_size;
-    final int[] x = new int[Game_units];
-    final int[] y = new int[Game_units];
-    int[][] panelMtx = new int[screen_width / unit_size][screen_hight / unit_size];
-    int bodyParts = 0;
-    int startPX = ((camera_width / unit_size) - 4) / 2;
-    int startPY = ((camera_hight / unit_size) - 4) / 2;
+    private final int Delay = 375;
+    private final int unit_size = 25;
+    private final int scale = 3;
+    private final int screen_width = scale * 600;
+    private final int camera_width = screen_width / scale;
+    private final int startPX = ((camera_width / unit_size) - 4) / 2;
+    private final int screen_hight = scale * 600;
+    private final int camera_hight = screen_hight / scale;
+    private final int startPY = ((camera_hight / unit_size) - 4) / 2;
+    private final int Game_units = (screen_width * screen_hight) / unit_size;
+    private final int[] x = new int[Game_units];
+    private final int[] y = new int[Game_units];
+    private final int[][] panelMtx = new int[screen_width / unit_size][screen_hight / unit_size];
+    private int bodyParts = 0;
     char direction = 'L';
     boolean running = false;
     Timer timer;
+    Draw dd = new Draw(screen_hight, screen_width, unit_size, startPY, startPX, x, y, panelMtx, bodyParts);
 
     GamePanel() {
-        //random = new Random();
         this.setPreferredSize(new Dimension(camera_width, camera_hight));
         this.setBackground(Color.white);
         this.setFocusable(true);
@@ -31,29 +31,16 @@ public class GamePanel extends JPanel implements ActionListener {
         startGame();
     }
 
-    public void chap() {
-        for (int i = 0; i < screen_width / unit_size; i++) {
-            for (int j = 0; j < screen_hight / unit_size; j++) {
-                System.out.print(panelMtx[i][j] + " ");
-                if (j == ((screen_hight / unit_size) - 1))
-                    System.out.println();
-            }
-        }
-    }
-
     public void startGame() {
         running = true;
-        primaryPaint();
+        dd.primaryPaint();
         timer = new Timer(Delay, this);
         timer.start();
-        chap();
     }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        draw(g);
+        dd.drawer(g);
     }
-
     public void move() {
         for (int i = bodyParts; i > 0; i--) {
             x[i] = x[i - 1];
@@ -102,66 +89,6 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
     }
-
-
-    public void primaryPaint() {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                panelMtx[startPX + i][startPY + j] = 2;
-            }
-        }
-    }
-
-    public void fill() {
-        for (int i = 0; i < screen_width / unit_size; i++) {
-            for (int j = 0; j < screen_hight / unit_size; j++) {
-                if (panelMtx[i][j] > 0)
-                    panelMtx[i][j] = 2;
-            }
-        }
-        bodyParts = 1;
-
-    }
-
-    public void draw(Graphics g) {
-        for (int i = 0; i < screen_hight / unit_size; i++) {
-            g.setColor(Color.black);
-            g.drawLine(i * unit_size, 0, i * unit_size, screen_hight);
-            g.drawLine(0, i * unit_size, screen_width, i * unit_size);
-        }
-
-        for (int i = 0; i <= bodyParts; i++) {
-            if (i == 0) {
-                g.setColor(Color.green);
-                g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
-                if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2 && bodyParts > 1) {
-                    fill();
-                    checkCollisions();
-                }
-                panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] = 1;
-            }
-        }
-        for (int k = 0; k < screen_width / unit_size; k++) {
-            for (int j = 0; j < screen_hight / unit_size; j++) {
-                if (panelMtx[k][j] == 2) {
-                    g.setColor(Color.green);
-                    g.fillRect(j * unit_size, k * unit_size, unit_size, unit_size);
-                }
-                g.setColor(new Color(45, 180, 10, 100));
-                if (panelMtx[k][j] == 1) {
-                    g.fillRect(j * unit_size, k * unit_size, unit_size, unit_size);
-                }
-
-            }
-        }
-
-    }
-
-    public void checkCollisions() {
-        MatrixConverter converter = new MatrixConverter(panelMtx);
-        converter.convertZeros();
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -237,4 +164,15 @@ public class GamePanel extends JPanel implements ActionListener {
             }
         }
     }
+
+    /*public void chap() {
+        for (int i = 0; i < screen_width / unit_size; i++) {
+            for (int j = 0; j < screen_hight / unit_size; j++) {
+                System.out.print(panelMtx[i][j] + " ");
+                if (j == ((screen_hight / unit_size) - 1))
+                    System.out.println();
+            }
+        }
+    }*/
+
 }
