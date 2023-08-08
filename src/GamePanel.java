@@ -3,13 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GamePanel extends JPanel implements ActionListener {
-    static final int screen_width = 4 * 600;
-    static final int screen_hight = 4 * 600;
-    static final int camera_width = screen_width / 4;
-    static final int camera_hight = screen_hight / 4;
-    static final int unit_size = 25;
-    static final int Game_units = (screen_width * screen_hight) / unit_size;
     static final int Delay = 375;
+    static final int unit_size = 25;
+    static int scale = 3;
+    static final int screen_width = scale * 600;
+    static final int camera_width = screen_width / scale;
+    static final int screen_hight = scale * 600;
+    static final int camera_hight = screen_hight / scale;
+    static final int Game_units = (screen_width * screen_hight) / unit_size;
     final int[] x = new int[Game_units];
     final int[] y = new int[Game_units];
     int[][] panelMtx = new int[screen_width / unit_size][screen_hight / unit_size];
