@@ -1,29 +1,29 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
-    static final int screen_width = 2 * 600;
-    static final int screen_hight = 2 * 600;
+    static final int screen_width = 4 * 600;
+    static final int screen_hight = 4 * 600;
+    static final int camera_width = screen_width / 4;
+    static final int camera_hight = screen_hight / 4;
     static final int unit_size = 25;
     static final int Game_units = (screen_width * screen_hight) / unit_size;
-    static final int Delay = 275;
+    static final int Delay = 375;
     final int[] x = new int[Game_units];
     final int[] y = new int[Game_units];
     int[][] panelMtx = new int[screen_width / unit_size][screen_hight / unit_size];
     int bodyParts = 0;
-    int startPX = ((screen_width / 2 / unit_size) - 4) / 2;
-    int startPY = ((screen_hight / 2 / unit_size) - 4) / 2;
+    int startPX = ((camera_width / unit_size) - 4) / 2;
+    int startPY = ((camera_hight / unit_size) - 4) / 2;
     char direction = 'L';
     boolean running = false;
     Timer timer;
-    Random random;
 
     GamePanel() {
-        random = new Random();
-        this.setPreferredSize(new Dimension(screen_width / 2, screen_hight / 2));
-        this.setBackground(Color.black);
+        //random = new Random();
+        this.setPreferredSize(new Dimension(camera_width, camera_hight));
+        this.setBackground(Color.white);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdepter());
         this.addMouseMotionListener(new MyMouseAdepter());
@@ -62,9 +62,7 @@ public class GamePanel extends JPanel implements ActionListener {
         switch (direction) {
             case 'U':
                 //y[0] = y[0] - unit_size;
-                for (int i = screen_hight / unit_size - 1; i > 0; i--) {
-                    panelMtx[screen_width / unit_size - 1][i] = 0;
-                }
+                System.arraycopy(panelMtx[screen_width / unit_size - 1], 1, panelMtx[0], 1, screen_hight / unit_size - 1);
                 // Shift each element in each column down by the shiftAmount
                 for (int i = screen_hight / unit_size - 1; i > 0; i--) {
                     System.arraycopy(panelMtx[i - 1], 0, panelMtx[i], 0, screen_width / unit_size);
@@ -73,9 +71,7 @@ public class GamePanel extends JPanel implements ActionListener {
             case 'D':
                 //y[0] = y[0] + unit_size;
                 // Add a row of zeros at the top
-                for (int i = 0; i < screen_hight / unit_size; i++) {
-                    panelMtx[screen_width / unit_size - 1][i] = 0;
-                }
+                System.arraycopy(panelMtx[0], 0, panelMtx[screen_width / unit_size - 1], 0, screen_hight / unit_size);
                 // Shift each element in each column down by the shiftAmount
                 for (int i = 0; i < screen_hight / unit_size - 1; i++) {
                     System.arraycopy(panelMtx[i + 1], 0, panelMtx[i], 0, screen_width / unit_size);
@@ -84,21 +80,22 @@ public class GamePanel extends JPanel implements ActionListener {
             case 'L':
                 //x[0] = x[0] - unit_size;
                 for (int i = 0; i < screen_width / unit_size; i++) {
-                    //int firstElement = panelMtx[i][0];
+                    int firstElement = panelMtx[i][screen_hight / unit_size - 1];
                     for (int j = screen_hight / unit_size - 1; j > 0; j--) {
                         panelMtx[i][j] = panelMtx[i][j - 1];
+
                     }
-                    panelMtx[i][screen_hight / unit_size - 1] = 0;
+                    panelMtx[i][0] = firstElement;
                 }
                 break;
             case 'R':
                 //x[0] = x[0] + unit_size;
                 for (int i = 0; i < screen_width / unit_size; i++) {
-                    //int firstElement = panelMtx[i][0];
+                    int firstElement = panelMtx[i][0];
                     for (int j = 0; j < screen_hight / unit_size - 1; j++) {
                         panelMtx[i][j] = panelMtx[i][j + 1];
                     }
-                    panelMtx[i][screen_hight / unit_size - 1] = 0;
+                    panelMtx[i][screen_hight / unit_size - 1] = firstElement;
                 }
                 break;
         }
@@ -127,7 +124,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         for (int i = 0; i < screen_hight / unit_size; i++) {
-            g.setColor(Color.WHITE);
+            g.setColor(Color.black);
             g.drawLine(i * unit_size, 0, i * unit_size, screen_hight);
             g.drawLine(0, i * unit_size, screen_width, i * unit_size);
         }
@@ -162,8 +159,6 @@ public class GamePanel extends JPanel implements ActionListener {
     public void checkCollisions() {
         MatrixConverter converter = new MatrixConverter(panelMtx);
         converter.convertZeros();
-        System.out.println("************************************************************");
-        chap();
     }
 
 
