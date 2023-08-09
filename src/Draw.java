@@ -61,7 +61,6 @@ public class Draw {
                 g.setColor(Color.green);
                 g.fillRect(x[i] + startPX * unit_size, y[i] + startPY * unit_size, unit_size, unit_size);
                 if (panelMtx[y[i] / unit_size + startPY][x[i] / unit_size + startPX] == 2) {
-                    System.out.println("sxddsdsdsdsddasdsdsds");
                     fill();
                     checkCollisions();
                 }
